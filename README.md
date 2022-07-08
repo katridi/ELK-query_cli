@@ -10,5 +10,30 @@ Ideally reuse practice task from module 6 and select appropriate dataset which w
 2. fuzzy
 3. raw
 4. geo
-5. time?
+5. regexp
+6. time?
+
+
+# Run it with suitable env
+
+``` bash
+# local setup
+docker-compose -f ./docker/docker-compose.yml up -d
+```
+
+# Build docker image
+
+``` bash
+sudo docker build -t cli_es -f docker/Dockerfile .
+```
+
+# Run image
+
+``` bash
+docker run --network=host -it cli_es
+```
+
+# Usage within container
+
+## For simplicity `search` alias is used to run the app
 

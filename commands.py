@@ -25,3 +25,7 @@ def geo_query(long: float, lat: float, distance: float) -> Dict:
             }
         }
     }
+
+
+def regexp_term(term: str, regex: str):
+    return {"query": {"regexp": {term: {"value": regex}}}}
