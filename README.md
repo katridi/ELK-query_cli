@@ -12,6 +12,7 @@ Ideally reuse practice task from module 6 and select appropriate dataset which w
 4. geo
 5. regexp
 6. time/number range
+7. prefix
 
 
 # Run it with suitable env
@@ -20,6 +21,19 @@ Ideally reuse practice task from module 6 and select appropriate dataset which w
 # local setup
 docker-compose -f ./docker/docker-compose.yml up -d
 ```
+
+# Add data
+
+## Go to [localhost:5061](localhost:5061)
+
+![image](./screenshots/add_data.png)
+![image](./screenshots/add_data2.png)
+
+## Add `opensearch_dashboards_sample_data_ecommerce` or whatever index you like
+## NB
+Default terms for queries are from `opensearch_dashboards_sample_data_ecommerce` and it's a default index to search.
+
+
 
 # Build docker image
 
@@ -38,5 +52,37 @@ docker run --network=host -it cli_es
 ## For simplicity `search` alias is used to run the app in container
 
 
-python3 app.py range --term="order_date" --lte="now"
 
+## Will give you an overview for possible commands and basic desription
+
+![image](./screenshots/search.png)
+
+``` bash
+search
+```
+
+To change index type 
+``` bash
+search index "index_name"
+```
+You should see message if index exists
+``` bash
+Index set to "index_name"
+```
+
+Otherwise
+``` python
+ValueError: Index 'index_name' doesn't exist.
+```
+
+## Run every command `search command --help` to find out more
+
+## 1. Match 
+
+![image](./screenshots/match_help.png)
+
+## Example
+
+``` bash 
+search match --term="geoip.city_name" --value="Cairo"
+```

@@ -5,7 +5,7 @@ from typing import Dict
 import click
 
 from app_context import AppContext, create_app_context
-from commands import fuzzy_term, geo_query, match_term, range_term, regexp_term
+from commands import fuzzy_term, geo_query, match_term, range_term, regexp_term, prefix_term
 
 
 @click.command()
@@ -14,7 +14,7 @@ from commands import fuzzy_term, geo_query, match_term, range_term, regexp_term
 @click.option("--value", help="value for the term")
 def match(ctx, term, value):
     """Takes term and value for direct search."""
-    query: Dict = match_term(term=term, value=value)
+    query: Dict = match_term(term=term, value=value or "")
     searcher: AppContext = ctx.obj
     res: Dict = searcher.search_in_index(body=query)
     print(json.dumps(res, indent=4, ensure_ascii=False))
@@ -82,6 +82,38 @@ def range(ctx, term, gte, lte):
     print(json.dumps(res, indent=4, ensure_ascii=False))
 
 
+@click.command()
+@click.option("--term", default="customer_first_name.keyword", help="term for quering")
+@click.option("--pre", type=str, help="prefix for a term for quering")
+@click.pass_context
+def prefix(ctx, term, pre):
+    """Takes term and prefix for quering."""
+    searcher: AppContext = ctx.obj
+    query: Dict = prefix_term(term=term, prefix=pre or "")
+    res: Dict = searcher.search_in_index(body=query)
+    print(json.dumps(res, indent=4, ensure_ascii=False))
+
+
+@click.command()
+@click.option("--term", default="customer_first_name.keyword", help="term for quering")
+@click.option("--pre", type=str, help="prefix for a term for quering")
+@click.pass_context
+def prefix(ctx, term, pre):
+    """Takes term and prefix for quering."""
+    searcher: AppContext = ctx.obj
+    query: Dict = prefix_term(term=term, prefix=pre or "")
+    res: Dict = searcher.search_in_index(body=query)
+    print(json.dumps(res, indent=4, ensure_ascii=False))
+
+
+@click.command()
+@click.argument("index_name", type=str)
+@click.pass_context
+def index(ctx, index_name):
+    """Set index for quering."""
+    searcher: AppContext = ctx.obj
+    searcher.set_index(index_name=index_name)
+
 
 @click.group()
 @click.pass_context
@@ -90,9 +122,8 @@ def cli(ctx):
 
 
 if __name__ == "__main__":
-    commands = [match, raw, fuzzy, geo, regex, range]
+    commands = [match, raw, fuzzy, geo, regex, range, prefix, index]
     for command in commands:
         cli.add_command(command)
-    # make decorator to pass es
     app_context = create_app_context()
     cli(obj=app_context)

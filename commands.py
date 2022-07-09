@@ -27,7 +27,7 @@ def geo_query(long: float, lat: float, distance: float, geo_term: str) -> Dict:
     }
 
 
-def regexp_term(term: str, regex: str):
+def regexp_term(term: str, regex: str) -> Dict:
     return {"query": {"regexp": {term: {"value": regex}}}}
 
 
@@ -42,3 +42,7 @@ def range_term(term: str, gte: Optional[str], lte:  Optional[str]) -> Dict:
             }
         }
     }
+
+
+def prefix_term(term: str, prefix: str) -> Dict:
+    return {"query": {"prefix": {term: prefix}}}
