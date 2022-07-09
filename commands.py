@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 
 def match_term(term: str, value: str) -> Dict:
@@ -9,7 +9,7 @@ def fuzzy_term(term: str, value: str) -> Dict:
     return {"query": {"fuzzy": {term: {"value": value}}}}
 
 
-def geo_query(long: float, lat: float, distance: float) -> Dict:
+def geo_query(long: float, lat: float, distance: float, geo_term: str) -> Dict:
     return {
         "query": {
             "bool": {
@@ -17,7 +17,7 @@ def geo_query(long: float, lat: float, distance: float) -> Dict:
                     "match_all": {}
                 },
                 "filter": {
-                    "geo_distance": {
+                    geo_term: {
                         "distance": f'{distance}km',
                         "geoip.location": [long, lat]
                     }
@@ -29,3 +29,16 @@ def geo_query(long: float, lat: float, distance: float) -> Dict:
 
 def regexp_term(term: str, regex: str):
     return {"query": {"regexp": {term: {"value": regex}}}}
+
+
+def range_term(term: str, gte: Optional[str], lte:  Optional[str]) -> Dict:
+    return {
+        "query": {
+            "range": {
+                term: {
+                    **({"gte": gte} if gte else {}),
+                    **({"lte": lte} if lte else {}),
+                }
+            }
+        }
+    }

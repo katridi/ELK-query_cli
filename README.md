@@ -6,12 +6,12 @@ Ideally reuse practice task from module 6 and select appropriate dataset which w
 
 # The implementation
 
-1. term
+1. match
 2. fuzzy
 3. raw
 4. geo
 5. regexp
-6. time?
+6. time/number range
 
 
 # Run it with suitable env
@@ -35,5 +35,8 @@ docker run --network=host -it cli_es
 
 # Usage within container
 
-## For simplicity `search` alias is used to run the app
+## For simplicity `search` alias is used to run the app in container
+
+
+python3 app.py range --term="order_date" --lte="now"
 

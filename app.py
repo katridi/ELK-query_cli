@@ -5,7 +5,7 @@ from typing import Dict
 import click
 
 from app_context import AppContext, create_app_context
-from commands import fuzzy_term, geo_query, match_term, regexp_term
+from commands import fuzzy_term, geo_query, match_term, range_term, regexp_term
 
 
 @click.command()
@@ -45,11 +45,12 @@ def raw(ctx, raw_query):
 
 @click.command()
 @click.option("--distance", type=float, default=1, help="distance in km, default = 1")
+@click.option("--geo_term", type=str, default="geo_distance", help="name of geo field")
 @click.argument("long", type=float)
 @click.argument("lat", type=float)
 @click.pass_context
 def geo(ctx, distance, long, lat):
-    """Takes longitude and latitude input for quering."""
+    """Takes term for longitude and latitude input for quering."""
     searcher: AppContext = ctx.obj
     query: Dict = geo_query(long=long, lat=lat, distance=distance)
     res: Dict = searcher.search_in_index(body=query)
@@ -68,6 +69,20 @@ def regex(ctx, term, re):
     print(json.dumps(res, indent=4, ensure_ascii=False))
 
 
+@click.command()
+@click.option("--term", type=str, default="total_quantity", help="name of range field")
+@click.option("--gte", type=str, help="lower bound greater or equal of range field")
+@click.option("--lte", type=str, help="upper bound less or equal of range field")
+@click.pass_context
+def range(ctx, term, gte, lte):
+    """Takes term for lower and upper bound input for quering."""
+    searcher: AppContext = ctx.obj
+    query: Dict = range_term(term=term, gte=gte, lte=lte)
+    res: Dict = searcher.search_in_index(body=query)
+    print(json.dumps(res, indent=4, ensure_ascii=False))
+
+
+
 @click.group()
 @click.pass_context
 def cli(ctx):
@@ -75,7 +90,7 @@ def cli(ctx):
 
 
 if __name__ == "__main__":
-    commands = [match, raw, fuzzy, geo, regex]
+    commands = [match, raw, fuzzy, geo, regex, range]
     for command in commands:
         cli.add_command(command)
     # make decorator to pass es
