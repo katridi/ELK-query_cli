@@ -17,9 +17,9 @@ def geo_query(long: float, lat: float, distance: float, geo_term: str) -> Dict:
                     "match_all": {}
                 },
                 "filter": {
-                    geo_term: {
+                    "geo_distance": {
                         "distance": f'{distance}km',
-                        "geoip.location": [long, lat]
+                        geo_term: [long, lat]
                     }
                 }
             }

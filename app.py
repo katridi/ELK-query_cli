@@ -49,10 +49,10 @@ def raw(ctx, raw_query):
 @click.argument("long", type=float)
 @click.argument("lat", type=float)
 @click.pass_context
-def geo(ctx, distance, long, lat):
+def geo(ctx, distance, geo_term, long, lat):
     """Takes term for longitude and latitude input for quering."""
     searcher: AppContext = ctx.obj
-    query: Dict = geo_query(long=long, lat=lat, distance=distance)
+    query: Dict = geo_query(long=long, lat=lat, distance=distance, geo_term=geo_term)
     res: Dict = searcher.search_in_index(body=query)
     print(json.dumps(res, indent=4, ensure_ascii=False))
 
